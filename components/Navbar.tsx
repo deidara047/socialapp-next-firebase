@@ -1,6 +1,9 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 export default function Navbar() {
+  const router = useRouter();
+
   return (
     <nav className="navbar navbar-expand-lg bg-light">
       <div className="container">
@@ -21,17 +24,18 @@ export default function Navbar() {
         <div className="collapse navbar-collapse" id="navbarNavDropdown">
           <ul className="navbar-nav">
             <li className="nav-item">
-              <Link className="nav-link" aria-current="page" href="/">
+              {/* I could wrap this into a custom link tag but whatever */}
+              <Link className={`nav-link ${router.pathname === "/" ? "active": ""}`} href="/">
                 Home
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" aria-current="page" href="/user-slug">
+              <Link className={`nav-link ${(router.pathname === "/[userid]") ? "active" : ""}`} href="/me">
                 My User
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" href="/about">
+              <Link className={`nav-link ${router.pathname === "/about" ? "active" : ""}`} href="/about">
                 About
               </Link>
             </li>

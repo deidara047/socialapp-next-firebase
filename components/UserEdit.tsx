@@ -1,16 +1,28 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { UserInterface } from "../models/user.interface";
 import { faEye } from "@fortawesome/free-regular-svg-icons";
-import ToastMessage from "./ToastMessage";
+import ToastMessage, { ToastKinds, ToastKindsInterface } from "./ToastMessage";
+import { useState } from "react";
 
 export default function UserEdit({ user, enableEditFunction } : { user: UserInterface, enableEditFunction: Function }) {
   const { name, lastname, description, username } = user;
+  const [toastMessageAttributes, setToastMessageAttributes] = useState<ToastKindsInterface>({message: "", kind: "success"});
+  const [isMessageEnable, setIsMessageEnable] = useState(false);
+
+  const setMessage = (message: string, kind: ToastKinds) => {
+    setToastMessageAttributes({message, kind});
+    setIsMessageEnable(!isMessageEnable);
+  }
+
+  const onEditButtonClicked = () => {
+    setTimeout(() => setMessage("User Edited!", "success"), 1000)
+  }
 
   return (
     <form className="card">
       <div className="card-body">
         <h2>Edit User</h2>
-        <ToastMessage message="User edited successfully!" kind="success" />
+        {isMessageEnable && <ToastMessage {...toastMessageAttributes} />}
         <b>Username:</b>
         <input type="text" className="form-control" name="" id="" />
         <div className="row">
@@ -28,7 +40,7 @@ export default function UserEdit({ user, enableEditFunction } : { user: UserInte
           </div>
           <div className="d-flex mt-2">
             <button type="button" onClick={() => enableEditFunction()} className="btn btn-outline-secondary me-2"><FontAwesomeIcon icon={faEye} /> Show My User</button>
-            <input type="submit" className="btn btn-primary" value="Edit User" />
+            <button type="button" onClick={() => onEditButtonClicked()} className="btn btn-primary">Edit User</button> {/* Submit */}
           </div>
         </div>
       </div>

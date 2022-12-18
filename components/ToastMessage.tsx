@@ -1,4 +1,11 @@
-export default function ToastMessage({message, kind = "success"}: { message: string, kind?: string }) {
+export type ToastKinds = "success" | "danger";
+
+export interface ToastKindsInterface {
+  message: string,
+  kind: ToastKinds
+}
+
+export default function ToastMessage({message, kind }: { message: string, kind: ToastKinds}) {
   return <div className={`toast align-items-center text-bg-${kind} border-0`} style={{display: "block"}} role="alert" aria-live="assertive" aria-atomic="true">
   <div className="d-flex">
     <div className="toast-body">

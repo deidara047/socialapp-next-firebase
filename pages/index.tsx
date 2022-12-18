@@ -1,5 +1,5 @@
 import Head from "next/head";
-import Feed from "../components/Feed";
+import Posts from "../components/posts/Posts";
 import UsersList from "../components/UsersList";
 import WriteMyPost from "../components/WriteMyPost";
 import TwoColumnLayout from "../layout/TwoColumnLayout";
@@ -14,7 +14,7 @@ export default function Home() {
       <>
         <WriteMyPost></WriteMyPost>
         <hr />
-        <Feed></Feed>
+        <Posts></Posts>
       </>
       }
       right={

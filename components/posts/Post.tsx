@@ -1,34 +1,58 @@
-import CommentBlock from "./CommentBlock";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPen, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faThumbsUp as farThumbsUp } from "@fortawesome/free-regular-svg-icons";
 import { faComments } from "@fortawesome/free-solid-svg-icons";
-import { loremIpsum } from 'react-lorem-ipsum';
+import Comment from "./Comment"
+import postShowStyles from "../../styles/PostShow.module.css"
+import { useState } from "react";
 
-export default function Post() {
-  const mockPosts: Array<string[]> = [loremIpsum(), loremIpsum(), loremIpsum(), loremIpsum(), loremIpsum()]
-
-  return <>
-    {mockPosts.map((post, index) => {
-      return(
-        <div key={index} className="card mb-3">
+export default function Post({post, isUrlMe, postid} : {post: string[], isUrlMe: boolean,  postid: number}) {
+  const [isEditEnable, setIsEditEnable] = useState(false);
+  /* const contentInput: RefObject<HTMLTextAreaElement> = useRef(null); */
+  
+  return <div className="card mb-3">
           <div className="card-body">
-            <h6>User123</h6>
-            <p>{post.toString().substring(0, 200).concat(".")}</p>
-            <div>
+            {isUrlMe &&
+              <div className="d-flex my-2">
+                <button onClick={() => setIsEditEnable(!isEditEnable)} className="btn btn-info"><FontAwesomeIcon icon={faPen}></FontAwesomeIcon></button>
+                <button className={`btn btn-danger ms-2`}><FontAwesomeIcon icon={faTrashCan}></FontAwesomeIcon></button>
+              </div>
+            }
+            {!isEditEnable ?
+              <div>
+                <h6>User123</h6>
+                <p>{post.toString().substring(0, 200).concat(".")}</p> {/* All that for dev purposes */}
+              </div>
+             :
+              <form action="#">
+                <h6>User123</h6>
+                <b>Content</b>
+                <textarea className="form-control" style={{resize: "none"}} name="" id="" rows={5}></textarea>
+                <div className="d-flex mt-2">
+                  <button type="button" className="btn btn-primary me-2">Save</button>
+                </div>
+                <hr />
+              </form>
+             }
+            <div className="mt-3">
               <button className="btn btn-primary"><FontAwesomeIcon icon={farThumbsUp} /> 12</button>
-              {/* TODO: Comments should show with lazy-loading */}
               <button className="mx-2 btn btn-secondary"><FontAwesomeIcon icon={faComments} /> 12</button>
             </div>
           </div>
           <div className="card-footer">
+            {/* TODO: Comments should show with lazy-loading */}
             <strong className="h5">Comments</strong>
             <hr style={{margin: "0.5rem 0 1rem"}} />
-            <CommentBlock></CommentBlock>
-            <CommentBlock></CommentBlock>
-            <CommentBlock></CommentBlock>
+            <div>
+              <Comment></Comment>
+              <Comment></Comment>
+              <div className={postShowStyles.sub_comment + " ms-5"}>
+                <Comment></Comment>
+                Me no have button comments
+              </div>
+              <Comment></Comment>
+              <Comment></Comment>
+            </div>
           </div>
         </div>
-      )
-    })}
-  </>
 }
