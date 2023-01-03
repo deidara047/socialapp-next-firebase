@@ -41,6 +41,16 @@ export default function Navbar() {
             </li>
           </ul>
         </div>
+        <div>
+          <ul className="navbar-nav">
+            <li className="nav-item">
+              <Link className={`nav-link ${router.pathname === "/login" ? "active" : ""}`} href={"/login"}>Log In</Link>
+            </li>
+            <li className="nav-item">
+              <Link className={`nav-link ${router.pathname === "/signup" ? "active" : ""}`} href={"/signup"}>Sign Up</Link>
+            </li>
+          </ul>
+        </div>
       </div>
     </nav>
   );
