@@ -1,8 +1,16 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux';
+import { rdxSignOut } from '../redux/reducers/usersSlice';
+import { AppDispatch } from '../redux/store';
 
 export default function Navbar() {
   const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
+
+  const handleSignOut = () => {
+    dispatch(rdxSignOut());
+  }
 
   return (
     <nav className="navbar navbar-expand-lg bg-light">
@@ -48,6 +56,9 @@ export default function Navbar() {
             </li>
             <li className="nav-item">
               <Link className={`nav-link ${router.pathname === "/signup" ? "active" : ""}`} href={"/signup"}>Sign Up</Link>
+            </li>
+            <li className='nav-item'>
+              <button onClick={handleSignOut} className='nav-link' style={{backgroundColor: "transparent", border: "none"}}>Sign Out</button>
             </li>
           </ul>
         </div>
