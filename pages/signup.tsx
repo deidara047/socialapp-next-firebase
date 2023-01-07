@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useDispatch } from "react-redux";
 import { rdxSignUp } from "../redux/reducers/usersSlice";
@@ -6,6 +7,8 @@ import { AppDispatch } from "../redux/store";
 
 export default function SignUp() {
   const [formSignUp, setFormSignUp] = useState({email:"", password: ""});
+  const [signingUp, setSigningUp] = useState(false)
+  const router = useRouter();
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -15,7 +18,10 @@ export default function SignUp() {
 
   const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setSigningUp(!signingUp);
     dispatch(rdxSignUp({ email: formSignUp.email, password: formSignUp.password }))
+      .then((data) => {setSigningUp(!signingUp); router.push("/");})
+      .catch((error) => console.error(error))
   }
 
   return <div>
@@ -37,7 +43,7 @@ export default function SignUp() {
         </div>
       </div>
       <div className="card-footer text-center">
-        <button type="submit" className="btn btn-primary">Sign Up</button>
+        <button disabled={signingUp} type="submit" className="btn btn-primary">{signingUp ? "Loading...": "Sign Up"}</button>
       </div>
     </form>
   </div>
