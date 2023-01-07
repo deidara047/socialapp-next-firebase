@@ -24,7 +24,7 @@ export default function Home() {
             <LoadingSpinner></LoadingSpinner>
           </div>
         </div> : (user.logged ? <>
-          <h3>Hello {user.email}</h3>
+          <h3>Hello {user.email}!</h3>
           <br />
           <WriteMyPost></WriteMyPost>
           </>

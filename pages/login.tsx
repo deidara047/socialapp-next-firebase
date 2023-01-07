@@ -1,14 +1,17 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import LoadingSpinner from "../components/LoadingSpinner";
+import ToastMessage, { ToastKindsInterface } from "../components/ToastMessage";
 import { auth } from "../firebase";
 import { rdxSignIn, selectUserData } from "../redux/reducers/usersSlice";
 import { AppDispatch } from "../redux/store";
 
 export default function Login() {
   const [formLogIn, setFormLogIn] = useState({ email: "", password: "" });
+  const [toastData,setToastData] = useState<ToastKindsInterface>({message: "", kind: "danger"});
+  const [isError, setIsError] = useState(false)
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const user = useSelector(selectUserData);
@@ -22,10 +25,15 @@ export default function Login() {
     dispatch(
       rdxSignIn({ email: formLogIn.email, password: formLogIn.password })
     )
-      .then((data) => {console.log(data);router.push("/")})
-      .catch((error) => console.error(error));
+      .unwrap()
+      .then((data) => {
+        router.push("/")
+      })
+      .catch((error) => {
+        setToastData({...toastData, message: error.code})
+        setIsError(true);
+      });
   };
-
 
   if (auth.currentUser) router.replace("/");
 
@@ -41,7 +49,7 @@ export default function Login() {
           </div>
         </div>
       ) : (!user.logged ?
-        <form onSubmit={handleFormSubmit} className="card form-centered m-auto">
+        <form onSubmit={(e) => handleFormSubmit(e)} className="card form-centered m-auto">
           <div className="text-center card-header">
             <strong className="h4">Login</strong>
           </div>
@@ -72,6 +80,9 @@ export default function Login() {
                 className="form-control"
                 id="inputPassword"
               />
+              <div className="mt-3">
+                {isError && <ToastMessage closeDiv={setIsError} message={toastData.message} kind={toastData.kind}></ToastMessage>}
+              </div>
             </div>
           </div>
           <div className="card-footer text-center">

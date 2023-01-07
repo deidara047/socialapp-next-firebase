@@ -15,11 +15,16 @@ export const rdxSignOut = createAsyncThunk("users/signout" , async () => {
   const res = await signOut(auth);
 });
 
-export const rdxSignUp = createAsyncThunk("users/signup", async ({email, password}: { email: string, password:string }) => {
+export const rdxSignUp = createAsyncThunk("users/signup", async ({email, password, description}: { email: string, password:string, description: string }) => {
+  if(email === "" || password === "" || description === "") {
+    throw new Error("Some inputs are blank");
+  }
+  
   const res = await createUserWithEmailAndPassword(auth, email, password);
   const userAdded = await addDoc(collection(db, "users"), {
     uid: res.user.uid,
-    email: res.user.email
+    email: res.user.email,
+    description
   });
 
   console.log(userAdded)
