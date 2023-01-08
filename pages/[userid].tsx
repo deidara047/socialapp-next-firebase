@@ -40,7 +40,7 @@ export default function UserById() {
       <>
         {enableEdit ? <UserEdit enableEditFunction={switchEdit} user={user} /> : <UserInfo user={user} enableEditFunction={switchEdit} ></UserInfo>}
         <hr />
-        <Posts isUrlMe={isUrlMe}></Posts>
+        <Posts></Posts>
       </>
       }
     />

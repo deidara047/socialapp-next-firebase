@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, setDoc, doc } from "firebase/firestore";
 import { auth, db } from '../../firebase';
 import { RootState } from '../store';
 
@@ -21,7 +21,8 @@ export const rdxSignUp = createAsyncThunk("users/signup", async ({email, passwor
   }
   
   const res = await createUserWithEmailAndPassword(auth, email, password);
-  const userAdded = await addDoc(collection(db, "users"), {
+  // Now the Id is also the Uid for ease the development
+  const userAdded = await setDoc(doc(db, "users", res.user.uid ), {
     uid: res.user.uid,
     email: res.user.email,
     description
@@ -53,6 +54,7 @@ const usersSlice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(rdxSignOut.fulfilled, (state) => {
+
         state.uid = ""
         state.email = "";
         state.logged = false

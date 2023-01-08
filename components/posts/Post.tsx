@@ -1,12 +1,14 @@
 import { faPen, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faThumbsUp as farThumbsUp } from "@fortawesome/free-regular-svg-icons";
+import { faHeart as farHeart } from "@fortawesome/free-regular-svg-icons";
+import { faHeart as fasHeart } from "@fortawesome/free-solid-svg-icons";
 import { faComments } from "@fortawesome/free-solid-svg-icons";
 import Comment from "./Comment"
 import postShowStyles from "../../styles/PostShow.module.css"
 import { useState } from "react";
+import { Posts as PostsInterface } from "../../models/post.interface";
 
-export default function Post({post, isUrlMe, postid} : {post: string[], isUrlMe: boolean,  postid: number}) {
+export default function Post({post, isUrlMe} : {post: PostsInterface, isUrlMe: boolean}) {
   const [isEditEnable, setIsEditEnable] = useState(false);
   /* const contentInput: RefObject<HTMLTextAreaElement> = useRef(null); */
   
@@ -20,8 +22,8 @@ export default function Post({post, isUrlMe, postid} : {post: string[], isUrlMe:
             }
             {!isEditEnable ?
               <div>
-                <h6>User123</h6>
-                <p>{post.toString().substring(0, 200).concat(".")}</p> {/* All that for dev purposes */}
+                <h6>{post.author.email}</h6>
+                <p>{post.content}</p> {/* All that for dev purposes */}
               </div>
              :
               <form action="#">
@@ -35,12 +37,14 @@ export default function Post({post, isUrlMe, postid} : {post: string[], isUrlMe:
               </form>
              }
             <div className="mt-3">
-              <button className="btn btn-primary"><FontAwesomeIcon icon={farThumbsUp} /> 12</button>
-              <button className="mx-2 btn btn-secondary"><FontAwesomeIcon icon={faComments} /> 12</button>
+              <button className="btn btn-light"><FontAwesomeIcon icon={farHeart} /> {post.likes.length}</button>
+              <button className="mx-2 btn btn-primary"><FontAwesomeIcon icon={faComments} /> {post.comments.length}</button>
             </div>
           </div>
-          <div className="card-footer">
-            {/* TODO: Comments should show with lazy-loading */}
+
+          {/* COMMENTS */}
+          {/* <div className="card-footer">
+            TODO: Comments should show with lazy-loading
             <strong className="h5">Comments</strong>
             <hr style={{margin: "0.5rem 0 1rem"}} />
             <div>
@@ -53,6 +57,6 @@ export default function Post({post, isUrlMe, postid} : {post: string[], isUrlMe:
               <Comment></Comment>
               <Comment></Comment>
             </div>
-          </div>
+          </div> */}
         </div>
 }

@@ -1,17 +1,16 @@
 import { Timestamp } from "firebase/firestore"
 
 export interface Posts {
-  author: string, // Implicity User.uid
+  author: {
+    id: string,
+    email: string
+  }
   content: string,
-  likes: number,
+  likes: string[],
   comments: [{
     author: string, // Implicity User.uid
     content: string,
-    likes: number,
-    subcomments: [{
-      author: string,
-      content: string
-    }]
+    likes: string[]
   }],
   createdAt: Timestamp,
   updatedAt: Timestamp

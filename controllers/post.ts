@@ -1,21 +1,16 @@
-import { collection, addDoc, query, orderBy, Timestamp } from "firebase/firestore";
+import { collection, addDoc, query, orderBy, Timestamp, getDocs, doc, DocumentData, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase";
 import { Posts } from "../models/post.interface";
 
-export async function getAllPosts() {
-  try {
-    return await query(collection(db, "posts"), orderBy("date"))
-  } catch (error) {
-    return error;
-  }
-}
-
-export async function addPost(content: string, userUid: string) {
+export async function addPost(content: string, userUid: string, userEmail: string) {
   try {
     const dataToUpload: Posts = {
-      author: userUid,
+      author: {
+        id: userUid,
+        email: userEmail
+      },
       content: content,
-      likes: 0,
+      likes: [],
       comments: [] as any,
       createdAt: Timestamp.fromDate(new Date()),
       updatedAt: Timestamp.fromDate(new Date())

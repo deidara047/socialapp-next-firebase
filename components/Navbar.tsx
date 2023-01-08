@@ -10,8 +10,8 @@ export default function Navbar() {
   const user = useSelector(selectUserData)
 
   const handleSignOut = () => {
+    window.location.href = "/"
     dispatch(rdxSignOut());
-    router.push("/")
   }
 
   return (

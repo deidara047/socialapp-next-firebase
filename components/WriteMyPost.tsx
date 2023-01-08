@@ -19,7 +19,7 @@ export default function WriteMyPost() {
     setIsFormLoading(true);
 
     if(post) {
-      addPost(post, user.uid)
+      addPost(post, user.uid, user.email)
         .then((data) => {
           setIsFormLoading(false);
           setToastData({message: "Post Published!", kind: "success"})
