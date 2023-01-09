@@ -20,16 +20,16 @@ export default function WriteMyPost() {
 
     if(post) {
       addPost(post, user.uid, user.email)
-        .then((data) => {
-          setIsFormLoading(false);
-          setToastData({message: "Post Published!", kind: "success"})
-          setIsMessage(true);
+        .then(() => {
+          setToastData({message: "Post Published!", kind: "success"});
           setPost("");
         })
         .catch((error) => {
           console.error(error)
-          setIsFormLoading(false);
           setToastData({message: error, kind: "danger"})
+        })
+        .finally(() => {
+          setIsFormLoading(false);
           setIsMessage(true);
         })
     } else {

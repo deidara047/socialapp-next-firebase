@@ -1,4 +1,4 @@
-import { collection, addDoc, query, orderBy, Timestamp, getDocs, doc, DocumentData, onSnapshot } from "firebase/firestore";
+import { collection, addDoc, query, Timestamp, getDoc, doc, updateDoc, arrayUnion, where, arrayRemove } from "firebase/firestore";
 import { db } from "../firebase";
 import { Posts } from "../models/post.interface";
 
@@ -21,4 +21,21 @@ export async function addPost(content: string, userUid: string, userEmail: strin
   } catch (error) {
     return error;
   }
+}
+
+export async function doLike(id: string, userId: string) {
+  const docRef = doc(db, "posts", id);
+  const data = (await getDoc(docRef)).data();
+
+  if(data) {
+    if(data.likes.includes(userId)) {
+      await updateDoc(docRef, { likes: arrayRemove(userId) })
+    } else {
+      await updateDoc(docRef, { likes: arrayUnion(userId) })
+    }
+  } else {
+    throw new Error("This post does not exists")
+  }
+    // return await updateDoc(docRef, { likes: arrayUnion(userId) })
+
 }

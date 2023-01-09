@@ -7,10 +7,24 @@ import Comment from "./Comment"
 import postShowStyles from "../../styles/PostShow.module.css"
 import { useState } from "react";
 import { Posts as PostsInterface } from "../../models/post.interface";
+import { doLike } from "../../controllers/post";
+import { useSelector } from "react-redux";
+import { selectUserData } from "../../redux/reducers/usersSlice";
 
 export default function Post({post, isUrlMe} : {post: PostsInterface, isUrlMe: boolean}) {
   const [isEditEnable, setIsEditEnable] = useState(false);
+  const [isLikeButtonLoading ,setIsLikeButtonLoading] = useState(false);
+  const user = useSelector(selectUserData);
   /* const contentInput: RefObject<HTMLTextAreaElement> = useRef(null); */
+
+  const handleLikeButtonClick = () => {
+    setIsLikeButtonLoading(true);
+    doLike(post.id!, user.uid)
+      .then(() => {
+        setIsLikeButtonLoading(false)
+      })
+      .catch((error) => console.error(error))
+  }
   
   return <div className="card mb-3">
           <div className="card-body">
@@ -37,7 +51,7 @@ export default function Post({post, isUrlMe} : {post: PostsInterface, isUrlMe: b
               </form>
              }
             <div className="mt-3">
-              <button className="btn btn-light"><FontAwesomeIcon icon={farHeart} /> {post.likes.length}</button>
+              <button onClick={() => handleLikeButtonClick()} disabled={isLikeButtonLoading} className="btn btn-light"> {isLikeButtonLoading ? "..." : <><FontAwesomeIcon style={{color: (post.likes.includes(user.uid) ? "#e74c3c":"") }} icon={post.likes.includes(user.uid) ? fasHeart:farHeart } /> {post.likes.length}</>}</button>
               <button className="mx-2 btn btn-primary"><FontAwesomeIcon icon={faComments} /> {post.comments.length}</button>
             </div>
           </div>
