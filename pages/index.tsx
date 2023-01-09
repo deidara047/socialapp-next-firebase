@@ -42,7 +42,7 @@ export default function Home() {
       }
       right={
         <>
-          <UsersList/>
+          <h1>:(</h1>
         </>
       }
     />

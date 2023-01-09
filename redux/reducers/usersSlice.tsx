@@ -12,7 +12,7 @@ const initialState = {
 }
 
 export const rdxSignOut = createAsyncThunk("users/signout" , async () => {
-  const res = await signOut(auth);
+  await signOut(auth);
 });
 
 export const rdxSignUp = createAsyncThunk("users/signup", async ({email, password, description}: { email: string, password:string, description: string }) => {

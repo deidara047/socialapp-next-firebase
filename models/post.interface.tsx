@@ -9,7 +9,11 @@ export interface Posts {
   content: string,
   likes: string[],
   comments: [{
-    author: string, // Implicity User.uid
+    id: string,
+    author: {
+      id: string,
+      email: string
+    }, // Implicity User.uid
     content: string,
     likes: string[]
   }],
