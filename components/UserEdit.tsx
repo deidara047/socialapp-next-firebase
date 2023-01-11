@@ -2,45 +2,55 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { UserInterface } from "../models/user.interface";
 import { faEye } from "@fortawesome/free-regular-svg-icons";
 import ToastMessage, { ToastKinds, ToastKindsInterface } from "./ToastMessage";
-import { useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
+
+interface UserEditForm {
+  email: string,
+  description: string
+}
 
 export default function UserEdit({ user, enableEditFunction } : { user: UserInterface, enableEditFunction: Function }) {
-  const { name, lastname, description, username } = user;
+  const { email, description } = user;
   const [toastMessageAttributes, setToastMessageAttributes] = useState<ToastKindsInterface>({message: "", kind: "success"});
   const [isMessageEnable, setIsMessageEnable] = useState(false);
+  const [formUserEdit, setFormUserEdit] = useState<UserEditForm>({ email: user.email, description: user.description });
+
+  const handleFormChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if(!e.target.name) throw new Error("500: Reload the page")
+    setFormUserEdit({...formUserEdit, [e.target.name]: e.target.value})
+  }
 
   const setMessage = (message: string, kind: ToastKinds) => {
     setToastMessageAttributes({message, kind});
     setIsMessageEnable(!isMessageEnable);
   }
 
-  const onEditButtonClicked = () => {
-    setTimeout(() => setMessage("User Edited!", "success"), 1000)
+  const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const { email, description } = formUserEdit;
+    if(email && description) {
+      console.log(email, description);
+    } else {
+      throw new Error("400: Reload the page, if that does not work, contact the developer")
+    }
   }
 
   return (
-    <form className="card">
+    <form onSubmit={(e) => handleFormSubmit(e)} className="card">
       <div className="card-body">
         <h2>Edit User</h2>
-        {isMessageEnable && <ToastMessage {...toastMessageAttributes} />}
-        <b>Username:</b>
-        <input type="text" className="form-control" name="" id="" />
+        {/* isMessageEnable && <ToastMessage {...toastMessageAttributes} />*/}
+        <b>Email:</b>
+        <input required={true} onChange={(e) => handleFormChange(e)} defaultValue={email} type="email" className="form-control" name="email"/>
         <div className="row">
-          <div className="col-6">
-            <b>Name:</b>
-            <input type="text" className="form-control" name="" id="" />
-          </div>
-          <div className="col-6">
-            <b>Last Name:</b>
-            <input type="text" className="form-control" name="" id="" />
-          </div>
           <div className="col-12">
             <b>Description:</b>
-            <textarea name="" id="" className="form-control" style={{resize: "none"}} rows={4}></textarea>
+            <textarea required={true} onChange={(e) => handleFormChange(e)} defaultValue={description} name="description" id="" className="form-control" style={{resize: "none"}} rows={4}></textarea>
           </div>
           <div className="d-flex mt-2">
             <button type="button" onClick={() => enableEditFunction()} className="btn btn-outline-secondary me-2"><FontAwesomeIcon icon={faEye} /> Show My User</button>
-            <button type="button" onClick={() => onEditButtonClicked()} className="btn btn-primary">Edit User</button> {/* Submit */}
+            <button type="submit" className="btn btn-primary">Edit User</button> {/* Submit */}
           </div>
         </div>
       </div>

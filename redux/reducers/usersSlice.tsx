@@ -54,7 +54,6 @@ const usersSlice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(rdxSignOut.fulfilled, (state) => {
-
         state.uid = ""
         state.email = "";
         state.logged = false

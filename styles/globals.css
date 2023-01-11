@@ -15,3 +15,9 @@
 .form-centered {
   max-width: 550px;
 }
+
+.user-link {
+  text-decoration: none;
+  color: rgb(10, 0, 53);
+  font-weight: bold;
+}

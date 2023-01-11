@@ -3,6 +3,10 @@ import { db } from "../firebase";
 import { Posts } from "../models/post.interface";
 import { uuidv4 } from "@firebase/util";
 
+export async function getOnSnapshotPosts() {
+
+}
+
 export async function addPost(content: string, userUid: string, userEmail: string) {
   try {
     const dataToUpload: Posts = {
@@ -17,7 +21,11 @@ export async function addPost(content: string, userUid: string, userEmail: strin
       updatedAt: Timestamp.fromDate(new Date())
     }
     
-    return await addDoc(collection(db, "posts"), dataToUpload);
+    if(userUid) {
+      return await addDoc(collection(db, "posts"), dataToUpload);
+    } else {
+      throw new Error("401: You are not logged");
+    }
     
   } catch (error) {
     return error;
@@ -29,10 +37,14 @@ export async function doLike(id: string, userId: string) {
   const data = (await getDoc(docRef)).data();
 
   if(data) {
-    if(data.likes.includes(userId)) {
-      await updateDoc(docRef, { likes: arrayRemove(userId) })
+    if(userId) {
+      if(data.likes.includes(userId)) {
+        await updateDoc(docRef, { likes: arrayRemove(userId) })
+      } else {
+        await updateDoc(docRef, { likes: arrayUnion(userId) })
+      }
     } else {
-      await updateDoc(docRef, { likes: arrayUnion(userId) })
+      throw new Error("401: You are not logged");
     }
   } else {
     throw new Error("This post does not exists")
@@ -44,7 +56,11 @@ export async function addComment(comment: string, postId: string, userId: string
   const data = (await getDoc(docRef)).data();
 
   if(data) {
-    await updateDoc(docRef, { comments: arrayUnion({id: uuidv4(), author: {id: userId, email: userEmail}, content: comment, likes: []}) })
+    if(userId) {
+      await updateDoc(docRef, { comments: arrayUnion({id: uuidv4(), author: {id: userId, email: userEmail}, content: comment, likes: []}) })
+    } else {
+      throw new Error("401: You are not logged");
+    }
   } else {
     throw new Error("This post does not exists")
   }
@@ -63,23 +79,17 @@ export async function doLikeComment(postId: string, commentId: string, userId: s
     const commentIndex = data.comments.findIndex((elem: any) => elem.id === commentId);
     
     if(comment) {
-      if(!comment.likes.includes(userId)) {
-        data.comments[commentIndex].likes.push(userId); // Creates a mutable (I know) object and saves it in the same "block"
+      if(userId) {
+        if(!comment.likes.includes(userId)) {
+          data.comments[commentIndex].likes.push(userId); // Creates a mutable (I know) object and saves it in the same "block"
+        } else {
+          const newLikesArr = data.comments[commentIndex].likes.filter((elem: any) => elem !== userId);
+          data.comments[commentIndex].likes = [...newLikesArr]; // Assigns mutablely (I know) a new array with filtered uids and saves it in the same "block"
+        }
+        await updateDoc(docRef, {...data, updatedAt: serverTimestamp()});
       } else {
-        const newLikesArr = data.comments[commentIndex].likes.filter((elem: any) => elem !== userId);
-        data.comments[commentIndex].likes = [...newLikesArr]; // Assigns mutablely (I know) a new array with filtered uids and saves it in the same "block"
+        throw new Error("401: You are not logged")
       }
-      await updateDoc(docRef, {...data, updatedAt: serverTimestamp()});
     }
   }
-
-  /* if(data) {
-    if(data.likes.includes(userId)) {
-      await updateDoc(docRef, { likes: arrayRemove(userId) })
-    } else {
-      await updateDoc(docRef, { likes: arrayUnion(userId) })
-    }
-  } else {
-    throw new Error("This post does not exists")
-  } */
 }
