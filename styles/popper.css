@@ -1,8 +1,10 @@
 #tooltip {
-  background-color: rgb(224, 224, 224);
-  border: 1px solid rgb(238, 238, 238);
-  border-radius: 6px;
-  z-index: 1;
+  background: rgba(51, 51, 51, 0.99);
+  color: white;
+  font-weight: bold;
+  padding: 4px 8px;
+  font-size: 13px;
+  border-radius: 4px;
 }
 
 #tooltip[data-popper-placement^='top'] > #arrow {

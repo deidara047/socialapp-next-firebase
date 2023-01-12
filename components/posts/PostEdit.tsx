@@ -1,5 +1,8 @@
 import { ChangeEvent, FormEvent, useState } from "react";
+import { useSelector } from "react-redux";
+import { editPost } from "../../controllers/post";
 import { Posts as PostsInterface } from "../../models/post.interface";
+import { selectUserData } from "../../redux/reducers/usersSlice";
 
 interface PostEditForm {
   content: string
@@ -7,6 +10,7 @@ interface PostEditForm {
 
 export default function PostEdit({post}: {post: PostsInterface}) {
   const [formPostEdit, setFormPostEdit] = useState<PostEditForm>({ content: post.content });
+  const user = useSelector(selectUserData);
 
   const handleFormChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if(!e.target.name) throw new Error("400: Reload the page")
@@ -18,7 +22,11 @@ export default function PostEdit({post}: {post: PostsInterface}) {
 
     const { content } = formPostEdit;
     if(content) {
-      console.log(content);
+      if(user.finished) {
+        editPost(user.uid, post.id!, content)
+          .then(() => console.log("Post Edited!"))
+          .catch((error) => console.error(error))
+      }
     } else {
       throw new Error("400: Reload the page, if that does not work, contact the developer")
     }

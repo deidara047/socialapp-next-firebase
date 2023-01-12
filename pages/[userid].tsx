@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -60,6 +61,10 @@ export default function UserById() {
           <div className="card-body d-flex justify-content-center"><LoadingSpinner /></div>
         </div> : <>{enableEdit ? <><UserEdit enableEditFunction={switchEdit} user={userData} /></>:<UserInfo isUrlMe={isUrlMe} user={userData} enableEditFunction={switchEdit} ></UserInfo>}</> }
         <hr />
+        {isUrlMe && <>
+          <Link href="/">&larr; Add your post</Link>
+          <hr />
+        </>}
         <Posts isUrlMe={isUrlMe} userIdFromUrl={userIdFromUrl}></Posts>
       </>
       }

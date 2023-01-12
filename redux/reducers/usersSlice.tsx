@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
-import { collection, addDoc, setDoc, doc } from "firebase/firestore";
+import { collection, addDoc, setDoc, doc, query, where, getDocs, QuerySnapshot, DocumentData } from "firebase/firestore";
 import { auth, db } from '../../firebase';
 import { RootState } from '../store';
 
@@ -33,6 +33,11 @@ export const rdxSignUp = createAsyncThunk("users/signup", async ({email, passwor
 })
 
 export const rdxSignIn = createAsyncThunk("users/signin", async ({email, password}: { email: string, password:string }) => {
+  const q = query(collection(db, "users"), where("email", "==", email));
+  const userData: QuerySnapshot<DocumentData> = await getDocs(q);
+
+  if(userData.empty) throw new Error("500: user not found") ;
+  
   const res = await signInWithEmailAndPassword(auth, email, password);
   return {email: res.user.email, uid: res.user.uid};
 })

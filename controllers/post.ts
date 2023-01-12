@@ -1,11 +1,7 @@
-import { collection, addDoc, query, Timestamp, getDoc, doc, updateDoc, arrayUnion, where, arrayRemove, serverTimestamp } from "firebase/firestore";
-import { db } from "../firebase";
+import { collection, addDoc, query, Timestamp, getDoc, doc, updateDoc, arrayUnion, where, arrayRemove, serverTimestamp, QuerySnapshot, DocumentSnapshot, DocumentData, deleteDoc } from "firebase/firestore";
+import { auth, db } from "../firebase";
 import { Posts } from "../models/post.interface";
 import { uuidv4 } from "@firebase/util";
-
-export async function getOnSnapshotPosts() {
-
-}
 
 export async function addPost(content: string, userUid: string, userEmail: string) {
   try {
@@ -90,6 +86,45 @@ export async function doLikeComment(postId: string, commentId: string, userId: s
       } else {
         throw new Error("401: You are not logged")
       }
+    }
+  }
+}
+
+export async function editPost(userId: string, postId: string, content: string): Promise<void> {
+  if(!auth.currentUser) throw new Error("User is not logged");
+  const postRef = doc(db, "posts", postId);
+  const userRef = doc(db, "users", userId);
+  const userGet = await getDoc(userRef);
+  const postDoc = await getDoc(postRef);
+  const user = userGet.data();
+  const post = postDoc.data();
+
+  if(!userGet.exists) throw new Error("User does not exists");
+  if(user && post && auth.currentUser) {
+    if(auth.currentUser.uid === post.author.id) {
+      await updateDoc(postRef, {content, updatedAt: serverTimestamp()})
+    } else {
+      throw new Error("User is not the author")
+    }
+  }
+}
+
+export async function deletePost(postId: string): Promise<void> {
+  if(!auth.currentUser) throw new Error("User is not logged");
+  const postRef = doc(db, "posts", postId);
+  const userRef = doc(db, "users", auth.currentUser!.uid);
+  const userGet = await getDoc(userRef);
+  const postDoc = await getDoc(postRef);
+  const user = userGet.data();
+  const post = postDoc.data();
+
+  if(!userGet.exists) throw new Error("User does not exists");
+  
+  if(user && post && auth.currentUser) {
+    if(auth.currentUser.uid === post.author.id) {
+      await deleteDoc(postRef)
+    } else {
+      throw new Error("User is not the author")
     }
   }
 }

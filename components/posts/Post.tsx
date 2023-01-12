@@ -6,7 +6,7 @@ import { faComments } from "@fortawesome/free-solid-svg-icons";
 import Comment from "./Comment";
 import { useEffect, useState } from "react";
 import { Posts as PostsInterface } from "../../models/post.interface";
-import { doLike } from "../../controllers/post";
+import { deletePost, doLike } from "../../controllers/post";
 import { useSelector } from "react-redux";
 import { selectUserData } from "../../redux/reducers/usersSlice";
 import LoadingSpinner from "../LoadingSpinner";
@@ -15,6 +15,7 @@ import { faUserPen } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import PostEdit from "./PostEdit";
+import Swal from "sweetalert2";
 
 export default function Post({
   post,
@@ -47,6 +48,29 @@ export default function Post({
     setShowCommentBox(!showCommentBox);
   };
 
+  const handleDeleteButtonClick = () => {
+    Swal.fire({
+      title: 'Are you sure you want to delete this post?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: 'gray',
+      confirmButtonText: 'Yes'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deletePost(post.id!)
+          .then(() => {
+            Swal.fire(
+              'Deleted!',
+              'Your post has been deleted.',
+              'success'
+            )
+          })
+          .catch(error => console.error(error))
+      }
+    })
+  }
+
   useEffect(() => {
     const tmOut = setTimeout(() => {
       if (showCommentBox) setShowComments(true);
@@ -69,7 +93,7 @@ export default function Post({
           >
             <FontAwesomeIcon icon={faPen}></FontAwesomeIcon>
           </button>
-          <button className={`btn btn-danger ms-2`}>
+          <button onClick={() => handleDeleteButtonClick()} className={`btn btn-danger ms-2`}>
             <FontAwesomeIcon icon={faTrashCan}></FontAwesomeIcon>
           </button>
         </div>
