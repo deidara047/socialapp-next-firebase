@@ -3,6 +3,9 @@ import { UserInterface } from "../models/user.interface";
 import { faEye } from "@fortawesome/free-regular-svg-icons";
 import ToastMessage, { ToastKinds, ToastKindsInterface } from "./ToastMessage";
 import { ChangeEvent, FormEvent, useState } from "react";
+import { editUser } from "../controllers/user";
+import Swal from "sweetalert2";
+import { useRouter } from "next/router";
 
 interface UserEditForm {
   email: string,
@@ -11,6 +14,7 @@ interface UserEditForm {
 
 export default function UserEdit({ user, enableEditFunction } : { user: UserInterface, enableEditFunction: Function }) {
   const { email, description } = user;
+  const router = useRouter();
   const [toastMessageAttributes, setToastMessageAttributes] = useState<ToastKindsInterface>({message: "", kind: "success"});
   const [isMessageEnable, setIsMessageEnable] = useState(false);
   const [formUserEdit, setFormUserEdit] = useState<UserEditForm>({ email: user.email, description: user.description });
@@ -28,9 +32,15 @@ export default function UserEdit({ user, enableEditFunction } : { user: UserInte
   const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const { email, description } = formUserEdit;
-    if(email && description) {
-      console.log(email, description);
+    const { description } = formUserEdit;
+    if(description) {
+      editUser(description)
+        .then(() => {
+          console.log("User edited!");
+          enableEditFunction();
+          router.reload(); // I just want to finish :)
+        })
+        .catch((error) => console.error(error))
     } else {
       throw new Error("400: Reload the page, if that does not work, contact the developer")
     }
@@ -42,7 +52,7 @@ export default function UserEdit({ user, enableEditFunction } : { user: UserInte
         <h2>Edit User</h2>
         {/* isMessageEnable && <ToastMessage {...toastMessageAttributes} />*/}
         <b>Email:</b>
-        <input required={true} onChange={(e) => handleFormChange(e)} defaultValue={email} type="email" className="form-control" name="email"/>
+        <p>{email}</p>
         <div className="row">
           <div className="col-12">
             <b>Description:</b>

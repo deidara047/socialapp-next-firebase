@@ -5,7 +5,7 @@ import LoadingSpinner from "../LoadingSpinner";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "../../firebase";
 
-export default function Posts({ isUrlMe, userIdFromUrl }: { isUrlMe: boolean, userIdFromUrl?: string }) {
+export default function Posts({ isUrlMe, userIdFromUrl }: { isUrlMe?: boolean, userIdFromUrl?: string }) {
   const [allPosts, setAllPosts] = useState<PostsInterface[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -41,7 +41,7 @@ export default function Posts({ isUrlMe, userIdFromUrl }: { isUrlMe: boolean, us
       ) : allPosts.length > 0 ? (
         <div>
           {allPosts.map((post, index) => (
-            <Post userIdFromUrl={userIdFromUrl} key={index} post={post} isUrlMe={isUrlMe} />
+            <Post userIdFromUrl={userIdFromUrl} key={index} post={post} isUrlMe={isUrlMe!} />
           ))}
         </div>
       ) : (
