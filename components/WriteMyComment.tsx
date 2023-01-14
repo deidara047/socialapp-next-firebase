@@ -15,7 +15,10 @@ export default function WriteMyComment({ postId }: { postId: string }) {
 
     if(comment) {
       addComment(comment, postId , user.uid, user.email)
-        .then(() => setIsCommentingLoading(false))
+        .then(() => {
+          setIsCommentingLoading(false);
+          setComment("");
+        })
         .catch((error) => console.error(error))
     }
   };
@@ -29,6 +32,7 @@ export default function WriteMyComment({ postId }: { postId: string }) {
         placeholder="Comment..."
         name="comment"
         required={true}
+        value={comment}
         onChange={(e) => setComment(e.target.value)}
         className="form-control"
         style={{ resize: "none" }}

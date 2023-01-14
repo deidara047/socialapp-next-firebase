@@ -9,7 +9,7 @@ interface PostEditForm {
   content: string
 }
 
-export default function PostEdit({post}: {post: PostsInterface}) {
+export default function PostEdit({post, returnToPost }: {post: PostsInterface, returnToPost: Function}) {
   const [formPostEdit, setFormPostEdit] = useState<PostEditForm>({ content: post.content });
   const [isMessage, setIsMessage] = useState(false);
   const [toastData,setToastData] = useState<ToastKindsInterface>({ message: "", kind: "danger" });
@@ -27,10 +27,12 @@ export default function PostEdit({post}: {post: PostsInterface}) {
     if(content) {
       if(user.finished) {
         editPost(user.uid, post.id!, content)
-          .then(() => console.log("Post Edited!"))
+          .then(() => {
+            returnToPost(false);
+          })
           .catch((error) => {
             setToastData({message: error.message, kind: "danger"});
-            setIsMessage(true)
+            setIsMessage(true);
           })
       }
     } else {

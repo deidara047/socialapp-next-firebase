@@ -110,7 +110,7 @@ export default function Post({
           {!isEditEnable ? (
             <p>{post.content}</p>
           ) : (
-            user.logged && <PostEdit post={post} />
+            user.logged && <PostEdit returnToPost={setIsEditEnable} post={post} />
           )}
         </div>
         <div className="mt-3">
