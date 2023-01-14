@@ -1,5 +1,8 @@
 ## Overview
-This is an application about a Social Media App, made with Firebase, Redux and NextJS. You can: create an account with Email/Password system, create posts, like posts, comment posts, edit posts, delete posts, edit the description of your user, and delete your account (yep, you can't edit or delete comments). I am not a big fan of my login system, I would improve it if I have more time, anyways on next projects it will be improved. Did you see that sad face on the corner? That is the section where a user panel was going to be. You were going to have the opportunity to follow other users and... yes, but not to complicate the project further, I removed it, sorry.
+This is an application about a Social Media App, made with Firebase, Redux and NextJS. You can: create an account with Email/Password system, create posts, like posts, comment posts, edit posts, delete posts, edit the description of your user, and delete your account (yep, you can't edit or delete comments). 
+
+I am not a big fan of my login system, I would improve it if I have more time, anyways on next projects it will be improved. Did you see that sad face on the corner? That is the section where a user panel was going to be. You were going to have the opportunity to follow other users and... yes, but not to complicate the project further, I removed it, sorry.
+
 
 You can check [this video](https://www.youtube.com/watch?v=hsFe38Lji_Y) to see full functionality.
 
