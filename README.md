@@ -26,4 +26,4 @@ This project will **probably not be possible to view online**, this is due to th
         };
     ```
     (you can also create an .env.local file and use Enviroment Variables, and no need for anything else since NextJS supports Enviroment Variables. more info [here](https://nextjs.org/docs/basic-features/environment-variables))
-    
+4. Run `npm run dev` and open it in your browser at `http://localhost:3000`
