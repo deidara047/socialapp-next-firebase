@@ -56,7 +56,7 @@ export default function SignUp() {
       <div className="card-body">
         <div className="mb-3">
           <label htmlFor="inputEmail" className="form-label">Email address</label>
-          <input name="email" required={true} onChange={(e) => handleFormChange(e)} type="email" placeholder="example@email.com" className="form-control" id="inputEmail" aria-describedby="email" />
+          <input autoComplete="off" name="email" required={true} onChange={(e) => handleFormChange(e)} type="email" placeholder="example@email.com" className="form-control" id="inputEmail" aria-describedby="email" />
         </div>
         <div className="mb-3">
           <label htmlFor="inputPassword" className="form-label">Password</label>

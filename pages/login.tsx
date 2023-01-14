@@ -73,6 +73,7 @@ export default function Login() {
                 placeholder="example@email.com"
                 className="form-control"
                 id="inputEmail"
+                autoComplete="off"
                 aria-describedby="email"
               />
             </div>
