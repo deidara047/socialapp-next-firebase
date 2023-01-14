@@ -15,8 +15,7 @@ export default function About() {
     <b>This project does not have a Responsive UI</b>
     <p>In order to get more information about this app, read the README.md file in the GitHub Repository</p>
     <p>A little tutorial about how to use this app:</p>
-    <p>(video about the app coming soon)</p>
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/ak7ZOuFsmao" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/hsFe38Lji_Y" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
     </>
   )
 }
