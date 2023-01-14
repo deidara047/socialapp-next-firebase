@@ -1,5 +1,6 @@
 ## Overview
-This is an application about a Social Media App, made with Firebase and NextJS. You can check [this video](https://www.youtube.com/watch?v=hsFe38Lji_Y) to see full functionality.
+This is an application about a Social Media App, made with Firebase, Redux and NextJS. You can: create an account with Email/Password system, create posts, like posts, comment posts, edit posts, delete posts, edit the description of your user, and delete your account (yep, you can't edit or delete comments). I am not a big fan of my login system, I would improve it if I have more time, anyways on next projects it will be improved. Did you see that sad face on the corner? That is the section where a user panel was going to be. You were going to have the opportunity to follow other users and... yes, but not to complicate the project further, I removed it, sorry.
+You can check [this video](https://www.youtube.com/watch?v=hsFe38Lji_Y) to see full functionality.
 
 ## Things to take into account
 - This project pretends to be in a Junior Developer portfolio. As you can see, it's the first project in this profile, and more exciting projects will come in the future
@@ -21,3 +22,4 @@ This project will **probably not be possible to view online**, this is due to th
         };
     ```
     (you can also create an .env.local file and use Enviroment Variables, and no need for anything else since NextJS supports Enviroment Variables. more info [here](https://nextjs.org/docs/basic-features/environment-variables))
+    
