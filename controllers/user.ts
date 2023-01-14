@@ -38,7 +38,9 @@ export async function getUser(userUid: string) {
 }
 
 export async function editUser( description: string ): Promise<void> {
-  if(!auth.currentUser) throw new Error("User is not logged");
+  if(!auth.currentUser) throw new Error("Error: User is not logged");
+  if(description.length > 60) throw new Error("Error: Description is too long")
+
   const userRef = doc(db, "users", auth.currentUser.uid);
   const user = getDoc(userRef);
 

@@ -39,7 +39,6 @@ export default function UserById() {
       if (result.isConfirmed) {
         deleteMyUser()
           .then(() => {
-            console.log("Deleted!");
             dispatch(rdxSignOut())
               .then(() => router.push("/"))
               .catch((error) => console.error(error))

@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { editPost } from "../../controllers/post";
 import { Posts as PostsInterface } from "../../models/post.interface";
 import { selectUserData } from "../../redux/reducers/usersSlice";
+import ToastMessage, { ToastKindsInterface } from "../ToastMessage";
 
 interface PostEditForm {
   content: string
@@ -10,6 +11,8 @@ interface PostEditForm {
 
 export default function PostEdit({post}: {post: PostsInterface}) {
   const [formPostEdit, setFormPostEdit] = useState<PostEditForm>({ content: post.content });
+  const [isMessage, setIsMessage] = useState(false);
+  const [toastData,setToastData] = useState<ToastKindsInterface>({ message: "", kind: "danger" });
   const user = useSelector(selectUserData);
 
   const handleFormChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -25,7 +28,10 @@ export default function PostEdit({post}: {post: PostsInterface}) {
       if(user.finished) {
         editPost(user.uid, post.id!, content)
           .then(() => console.log("Post Edited!"))
-          .catch((error) => console.error(error))
+          .catch((error) => {
+            setToastData({message: error.message, kind: "danger"});
+            setIsMessage(true)
+          })
       }
     } else {
       throw new Error("400: Reload the page, if that does not work, contact the developer")
@@ -44,6 +50,10 @@ export default function PostEdit({post}: {post: PostsInterface}) {
         defaultValue={post.content}
         required={true}
       ></textarea>
+      <p style={{color: (formPostEdit.content.length > 600 ? "#e74c3c" : "#27ae60")}}>{formPostEdit.content.length}/600</p>
+      <div>
+        {isMessage && <ToastMessage message={toastData.message} kind={toastData.kind} closeDiv={setIsMessage}></ToastMessage>}
+      </div>
       <div className="d-flex mt-2">
         <button type="submit" className="btn btn-primary me-2">
           Save

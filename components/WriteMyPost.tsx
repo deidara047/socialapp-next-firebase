@@ -25,8 +25,7 @@ export default function WriteMyPost() {
           setPost("");
         })
         .catch((error) => {
-          console.error(error)
-          setToastData({message: error, kind: "danger"})
+          setToastData({message: error.message, kind: "danger"})
         })
         .finally(() => {
           setIsFormLoading(false);
@@ -45,6 +44,7 @@ export default function WriteMyPost() {
     </div>
     <div className="card-body">
       <textarea required={true} rows={4} style={{resize: "none"}} placeholder="Your Post Here..." value={post} onChange={e => setPost(e.target.value)} className="form-control"></textarea>
+      <p style={{color: (post.length > 600 ? "#e74c3c" : "#27ae60")}}>{post.length}/600</p>
       <div className="mt-3">
         {isMessage && <ToastMessage closeDiv={setIsMessage} message={toastData.message} kind={toastData.kind}></ToastMessage>}
       </div>

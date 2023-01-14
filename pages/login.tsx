@@ -7,11 +7,12 @@ import ToastMessage, { ToastKindsInterface } from "../components/ToastMessage";
 import { auth } from "../firebase";
 import { rdxSignIn, selectUserData } from "../redux/reducers/usersSlice";
 import { AppDispatch } from "../redux/store";
+import { getMessageFromErrorCode } from "../utils/utils";
 
 export default function Login() {
   const [formLogIn, setFormLogIn] = useState({ email: "", password: "" });
   const [toastData,setToastData] = useState<ToastKindsInterface>({message: "", kind: "danger"});
-  const [isError, setIsError] = useState(false)
+  const [isError, setIsError] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const user = useSelector(selectUserData);
@@ -26,16 +27,23 @@ export default function Login() {
       rdxSignIn({ email: formLogIn.email, password: formLogIn.password })
     )
       .unwrap()
-      .then((data) => {
-        router.push("/")
-      })
       .catch((error) => {
-        setToastData({...toastData, message: error.code})
+        console.error(error)
+        setToastData({...toastData, message: getMessageFromErrorCode(error.code)})
         setIsError(true);
       });
   };
 
-  if (auth.currentUser) router.replace("/");
+  useEffect(() => {
+    let mounted = true;
+    if (user.logged) {
+        if(mounted) {
+          router.push("/")
+        }
+    }
+
+    return () => {mounted = false} 
+  }, [user.logged, router])
 
   return (
     <div>

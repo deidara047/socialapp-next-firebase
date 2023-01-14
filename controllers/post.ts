@@ -4,7 +4,8 @@ import { Posts } from "../models/post.interface";
 import { uuidv4 } from "@firebase/util";
 
 export async function addPost(content: string, userUid: string, userEmail: string) {
-  try {
+
+    if(content.length > 600) throw new Error("Content is too long");
     const dataToUpload: Posts = {
       author: {
         id: userUid,
@@ -22,10 +23,6 @@ export async function addPost(content: string, userUid: string, userEmail: strin
     } else {
       throw new Error("401: You are not logged");
     }
-    
-  } catch (error) {
-    return error;
-  }
 }
 
 export async function doLike(id: string, userId: string) {
@@ -92,6 +89,8 @@ export async function doLikeComment(postId: string, commentId: string, userId: s
 
 export async function editPost(userId: string, postId: string, content: string): Promise<void> {
   if(!auth.currentUser) throw new Error("User is not logged");
+  if(content.length > 600) throw new Error("Content is too long");
+
   const postRef = doc(db, "posts", postId);
   const userRef = doc(db, "users", userId);
   const userGet = await getDoc(userRef);

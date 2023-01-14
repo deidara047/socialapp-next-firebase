@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
-import { collection, addDoc, setDoc, doc, query, where, getDocs, QuerySnapshot, DocumentData } from "firebase/firestore";
+import { collection, addDoc, setDoc, doc, query, where, getDocs, QuerySnapshot, DocumentData, getDoc } from "firebase/firestore";
 import { auth, db } from '../../firebase';
 import { RootState } from '../store';
 
@@ -19,25 +19,27 @@ export const rdxSignUp = createAsyncThunk("users/signup", async ({email, passwor
   if(email === "" || password === "" || description === "") {
     throw new Error("Some inputs are blank");
   }
+
+  if(description.length >= 60) throw new Error("Description is too long");
   
   const res = await createUserWithEmailAndPassword(auth, email, password);
   // Now the Id is also the Uid for ease the development
-  const userAdded = await setDoc(doc(db, "users", res.user.uid ), {
+  
+
+  const userExists = await getDocs(query(collection(db, "users"), where("email", "==", email)))
+  userExists.forEach((data) => {
+    if(data.data().email === email) throw new Error("500: Contact the developer");
+  });
+
+  await setDoc(doc(db, "users", res.user.uid ), {
     uid: res.user.uid,
     email: res.user.email,
     description
   });
-
-  console.log(userAdded)
   return {email: res.user.email, uid: res.user.uid};
 })
 
 export const rdxSignIn = createAsyncThunk("users/signin", async ({email, password}: { email: string, password:string }) => {
-  const q = query(collection(db, "users"), where("email", "==", email));
-  const userData: QuerySnapshot<DocumentData> = await getDocs(q);
-
-  if(userData.empty) throw new Error("500: user not found") ;
-  
   const res = await signInWithEmailAndPassword(auth, email, password);
   return {email: res.user.email, uid: res.user.uid};
 })

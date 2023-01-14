@@ -15,18 +15,13 @@ interface UserEditForm {
 export default function UserEdit({ user, enableEditFunction } : { user: UserInterface, enableEditFunction: Function }) {
   const { email, description } = user;
   const router = useRouter();
-  const [toastMessageAttributes, setToastMessageAttributes] = useState<ToastKindsInterface>({message: "", kind: "success"});
+  const [toastData, setToastData] = useState<ToastKindsInterface>({message: "", kind: "success"});
   const [isMessageEnable, setIsMessageEnable] = useState(false);
   const [formUserEdit, setFormUserEdit] = useState<UserEditForm>({ email: user.email, description: user.description });
 
   const handleFormChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if(!e.target.name) throw new Error("500: Reload the page")
     setFormUserEdit({...formUserEdit, [e.target.name]: e.target.value})
-  }
-
-  const setMessage = (message: string, kind: ToastKinds) => {
-    setToastMessageAttributes({message, kind});
-    setIsMessageEnable(!isMessageEnable);
   }
 
   const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -40,7 +35,10 @@ export default function UserEdit({ user, enableEditFunction } : { user: UserInte
           enableEditFunction();
           router.reload(); // I just want to finish :)
         })
-        .catch((error) => console.error(error))
+        .catch((error) => {
+          setToastData({message: error.message, kind: "danger"})
+          setIsMessageEnable(true);
+        })
     } else {
       throw new Error("400: Reload the page, if that does not work, contact the developer")
     }
@@ -50,13 +48,16 @@ export default function UserEdit({ user, enableEditFunction } : { user: UserInte
     <form onSubmit={(e) => handleFormSubmit(e)} className="card">
       <div className="card-body">
         <h2>Edit User</h2>
-        {/* isMessageEnable && <ToastMessage {...toastMessageAttributes} />*/}
         <b>Email:</b>
         <p>{email}</p>
         <div className="row">
           <div className="col-12">
             <b>Description:</b>
             <textarea required={true} onChange={(e) => handleFormChange(e)} defaultValue={description} name="description" id="" className="form-control" style={{resize: "none"}} rows={4}></textarea>
+            <p style={{color: (formUserEdit.description.length > 60 ? "#e74c3c" : "#27ae60")}}>{formUserEdit.description.length}/60</p>
+          </div>
+          <div>
+            {isMessageEnable && <ToastMessage message={toastData.message} kind={toastData.kind} closeDiv={setIsMessageEnable} />}
           </div>
           <div className="d-flex mt-2">
             <button type="button" onClick={() => enableEditFunction()} className="btn btn-outline-secondary me-2"><FontAwesomeIcon icon={faEye} /> Show My User</button>
